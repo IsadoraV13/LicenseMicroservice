@@ -13,7 +13,6 @@ public class Player {
         this.playerId = playerId;
         this.playerFirstName = playerFirstName;
         this.playerLastName = playerLastName;
-        this.playerRank = null;
     }
 
     public Player(int playerId, String playerFirstName, String playerLastName, String playerRank) {
