@@ -2,9 +2,11 @@ package com.example.licensemicroservice.repository;
 
 import com.example.licensemicroservice.domain.Customer;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class CustomerRepository {
 
     private final List<Customer> customerList;
@@ -26,12 +28,10 @@ public class CustomerRepository {
     }
 
     public Customer findCustomerById(int customerId) {
-        CustomerRepository customerRepo = new CustomerRepository();
-        Customer customer = customerRepo.customerList.stream().filter(s -> s.getCustomerId() == customerId).findAny().orElseThrow(
+        return getCustomerList().stream().filter(s -> s.getCustomerId() == customerId).findAny().orElseThrow(
                 () ->
                         new EntityNotFoundException(
                                 "Customer ID %s not found".formatted(customerId)));
-        return customer;
     }
 
 

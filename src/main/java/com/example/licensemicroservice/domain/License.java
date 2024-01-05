@@ -1,7 +1,9 @@
 package com.example.licensemicroservice.domain;
 
+import com.example.licensemicroservice.repository.TournamentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.sql.Timestamp;
-import java.util.List;
 
 /*
 A customer may license either an individual match or a whole tournament.
@@ -14,25 +16,25 @@ public class License {
     private Timestamp startDate;
     private Timestamp endDate;
     private String licenseName;
+    private int tournamentId;
     private int singleMatchId;
-    private Tournament tournament;
 
-    public License(int licenseId, Timestamp startDate, Timestamp endDate, Tournament tournament) {
+    public License(int licenseId, Timestamp startDate, Timestamp endDate, String licenseName, int tournamentId) {
         this.licenseId = licenseId;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.licenseName = tournament.getTournamentName(); // licenseName is the same as TournamentName
-        this.tournament = tournament;
+        this.tournamentId = tournamentId;
+        this.licenseName = licenseName; //ToDo wanted licenseName to be the same as tournament name
     }
 
     // Overloaded constructor where license is for a single match id
-    public License(int licenseId, Timestamp startDate, Timestamp endDate, int singleMatchId, Tournament tournament) {
+    public License(int licenseId, Timestamp startDate, Timestamp endDate, String licenseName, int tournamentId, int singleMatchId) {
         this.licenseId = licenseId;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.licenseName = tournament.getTournamentName(); // licenseName is the same as TournamentName
+        this.tournamentId = tournamentId;
+        this.licenseName = licenseName; //ToDo wanted licenseName to be the same as tournament name
         this.singleMatchId = singleMatchId;
-        this.tournament = tournament;
     }
 
     public int getLicenseId() {
@@ -67,6 +69,14 @@ public class License {
         this.licenseName = licenseName;
     }
 
+    public int getTournamentId() {
+        return tournamentId;
+    }
+
+    public void setTournamentId(int tournamentId) {
+        this.tournamentId = tournamentId;
+    }
+
     public int getSingleMatchId() {
         return singleMatchId;
     }
@@ -75,13 +85,6 @@ public class License {
         this.singleMatchId = singleMatchId;
     }
 
-    public Tournament getTournament() {
-        return tournament;
-    }
-
-    public void setTournament(Tournament tournament) {
-        this.tournament = tournament;
-    }
 }
 
 

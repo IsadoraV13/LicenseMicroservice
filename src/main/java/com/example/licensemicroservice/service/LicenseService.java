@@ -8,17 +8,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class LicenseService {
+    private final LicenseRepository licenseRepository;
 
-    final LicenseRepository licenseRepository;
-
-    final TournamentRepository tournamentRepository;
-
-    final CustomerRepository customerRepository;
-
-    public LicenseService(LicenseRepository licenseRepository, TournamentRepository tournamentRepository, CustomerRepository customerRepository) {
+    public LicenseService(LicenseRepository licenseRepository) {
         this.licenseRepository = licenseRepository;
-        this.tournamentRepository = tournamentRepository;
-        this.customerRepository = customerRepository;
     }
 
     public License getLicenseById(int licenseId){

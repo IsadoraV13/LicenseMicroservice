@@ -1,6 +1,6 @@
 package com.example.licensemicroservice.repository;
 
-import com.example.licensemicroservice.domain.License;
+import com.example.licensemicroservice.domain.Match;
 import com.example.licensemicroservice.domain.Tournament;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Component;
@@ -25,27 +25,25 @@ public class TournamentRepository {
         Tournament tournament2 = new Tournament(2, "RollandGarros2023");
         Tournament tournament3 = new Tournament(3, "Wimbledon2024");
 
-        return List.of(tournament1, tournament2);
+        return List.of(tournament1, tournament2, tournament3);
     }
 
 
     public Tournament findTournamentById(int tournamentId) {
-        TournamentRepository tournamentRepo = new TournamentRepository();
-        Tournament tournament = tournamentRepo.getTournamentList().stream().filter(s -> s.getTournamentId() == tournamentId).findAny().orElseThrow(
+        return getTournamentList().stream().filter(s -> s.getTournamentId() == tournamentId).findAny().orElseThrow(
                 () ->
                         new EntityNotFoundException(
                                 "Tournament ID %s not found".formatted(tournamentId)));
-        return tournament;
     }
 
     public Tournament findTournamentByName(String tournamentName) {
-        TournamentRepository tournamentRepo = new TournamentRepository();
-        Tournament tournament = tournamentRepo.getTournamentList().stream().filter(s -> s.getTournamentName().equals(tournamentName)).findFirst().orElseThrow(
+        return getTournamentList().stream().filter(s -> s.getTournamentName().equals(tournamentName)).findFirst().orElseThrow(
                 () ->
                         new EntityNotFoundException(
                                 "Tournament with name '%s' not found".formatted(tournamentName)));
-        return tournament;
     }
+
+
 
 
 }

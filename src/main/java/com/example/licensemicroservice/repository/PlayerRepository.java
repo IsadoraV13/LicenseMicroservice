@@ -21,14 +21,13 @@ public class PlayerRepository {
         Player rafa = new Player(1, "Rafael", "Nadal", "1");
         Player serena = new Player(2, "Serena", "Williams", "1");
         Player federer = new Player(3, "Roger", "Federer", "2");
-        Player coco = new Player(3, "Coco", "Gauff", "3");
+        Player coco = new Player(4, "Coco", "Gauff", "3");
 
         return List.of(rafa, serena, federer, coco);
     }
 
     public Player findPlayerById(int playerId) {
-        PlayerRepository playerRepo = new PlayerRepository();
-        Player player = playerRepo.getPlayerList().stream().filter(s -> s.getPlayerId() == playerId).findAny().orElseThrow(
+        Player player = getPlayerList().stream().filter(s -> s.getPlayerId() == playerId).findAny().orElseThrow(
                 () ->
                         new EntityNotFoundException(
                                 "Player ID %s not found".formatted(playerId)));

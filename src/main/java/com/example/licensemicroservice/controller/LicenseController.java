@@ -19,7 +19,7 @@ public class LicenseController {
     }
 
     @GetMapping("license/{licenseId}")
-    public License getLicenseById(@PathVariable int licenseId) {
+    public License viewLicenseById(@PathVariable int licenseId) {
         return licenseService.getLicenseById(licenseId);
     }
 }

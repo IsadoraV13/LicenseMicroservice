@@ -19,7 +19,7 @@ public class TournamentController {
     }
 
     @GetMapping("tournament/{tournamentId}")
-    public Tournament getLicenseById(@PathVariable int tournamentId) {
+    public Tournament viewTournamentById(@PathVariable int tournamentId) {
         return tournamentService.getTournamentById(tournamentId);
     }
 }
