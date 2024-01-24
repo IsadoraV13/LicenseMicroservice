@@ -5,19 +5,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.Timestamp;
 
+// Requirements:
+// - A customer may license either an individual match or a whole tournament.
+// - Every match is part of a tournament.
+// - The service should support multiple customers with different license agreements.
+
 /*
-A customer may license either an individual match or a whole tournament.
-Every match is part of a tournament.
-The service should support multiple customers with different license agreements.
+I initially thought of a License as a bilateral agreement (one to one) between the company and a client
+Then refactored to think of a License as 'rights to stream an event' and therefore to a one to many relationship
  */
 
 public class License {
     private int licenseId;
-    private Timestamp startDate;
+    private Timestamp startDate; // I used TimeStamp because I did not know any better but now know this should be ZoneDateTime
     private Timestamp endDate;
     private String licenseName;
     private int tournamentId;
-    private int singleMatchId;
+    private int singleMatchId; // Optional parameter where License is for single Match
 
     public License(int licenseId, Timestamp startDate, Timestamp endDate, String licenseName, int tournamentId) {
         this.licenseId = licenseId;

@@ -3,9 +3,11 @@ package com.example.licensemicroservice.repository;
 import com.example.licensemicroservice.domain.Match;
 import com.example.licensemicroservice.domain.Player;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class PlayerRepository {
     private final List<Player> playerList;
 

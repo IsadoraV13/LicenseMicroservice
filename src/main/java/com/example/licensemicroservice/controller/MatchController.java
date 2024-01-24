@@ -5,17 +5,15 @@ import com.example.licensemicroservice.domain.ResponseEntity;
 import com.example.licensemicroservice.service.MatchService;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/matches")
@@ -27,18 +25,43 @@ public class MatchController {
         this.matchService = matchService;
     }
 
+
+    /*
+    This works
+     */
     @GetMapping("/{matchId}")
-    public ResponseEntity<LinkedHashMap<String, String>> viewMatchById(@PathVariable int matchId) throws JsonProcessingException {
+//    @ResponseStatus(HttpStatus.FOUND) // when is this used?
+    public ResponseEntity<LinkedHashMap<String, String>> viewMatchInfoById(@PathVariable int matchId) throws JsonProcessingException {
         ResponseEntity<LinkedHashMap<String, String>> response = new ResponseEntity<>();
-        response.setData(matchService.getMatchById(matchId));
-//        LOG.error("An exception occurred!", new Exception("Custom exception"));
+        response.setData(matchService.getMatchInfoById(matchId));
+        if (response.getData().isEmpty()) {
+            response.setResponse_code(HttpStatus.NOT_FOUND.value());
+            response.setMessage("match id %s not found".formatted(matchId));
+            LOG.error("An exception occurred", new EntityNotFoundException(response.getData().get("message")));
+        } else {
+            response.setResponse_code(HttpStatus.OK.value());
+            response.setMessage("Success"); // is this needed for a 200 if the response code is there anyway? what is
+            // best practice for what to put in the message?
+        }
+        return response; // still returning an empty data set and an actual Http status code of 200 for notFound, so my
+        // test is not working as accepted
+    }
+
+    /*
+    This does not work ... yet!
+     */
+    @GetMapping("/customer/{customerId}")
+    public ResponseEntity<List<LinkedHashMap<String, String>>> viewMatchesByCustomerId(@PathVariable int customerId) throws JsonProcessingException {
+        ResponseEntity<List<LinkedHashMap<String, String>>> response = new ResponseEntity<>();
+        response.setData(matchService.getMatchesByCustomerId(customerId).stream().map(
+                match -> matchService.getMatchInfoById(match.getMatchId()))
+                .collect(Collectors.toList()));
         return response;
     }
 
 
     /*
-    Not in the requirements per se but this would be useful if building an actual application and we would want to
-    see which matches are linked to a tournament
+    Not refactored.
      */
     @GetMapping("tournament/{tournamentId}")
     public List<Match> viewMatchesByTournamentId(@PathVariable int tournamentId) {

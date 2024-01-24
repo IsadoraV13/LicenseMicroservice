@@ -27,18 +27,17 @@ public class CustomerLicensingRepository {
         CustomerLicensing tennisLoversWimbledon2023 = new CustomerLicensing(123, 2);
         CustomerLicensing tennisLoversWimbledonWomen2023 = new CustomerLicensing(123, 3);
         CustomerLicensing tennisLoversWimbledonMen2023 = new CustomerLicensing(123, 4);
+        CustomerLicensing tennisLoversWimbledonMen2024 = new CustomerLicensing(123, 5);
         CustomerLicensing allSportsLoversWimbledon2023 = new CustomerLicensing(789, 5);
 
-        return List.of(tennisLoversATP2023, tennisLoversWimbledon2023, tennisLoversWimbledonWomen2023, tennisLoversWimbledonMen2023, allSportsLoversWimbledon2023);
+        return List.of(tennisLoversATP2023, tennisLoversWimbledon2023, tennisLoversWimbledonWomen2023,
+                tennisLoversWimbledonMen2023, tennisLoversWimbledonMen2024, allSportsLoversWimbledon2023);
     }
 
 
-    public CustomerLicensing findCustomerLicensingByCustomerId(int customerId) {
-        return getCustomerLicensingList().stream().filter(
-                s -> s.getCustomerId() == customerId).findAny().orElseThrow(() -> new EntityNotFoundException(
-                                "Customer ID %s not found".formatted(customerId)));
-    } //ToDo needed?
-
+    /*
+    Not refactored
+     */
     public List<Integer> findLicenseIdsByCustomerId(int customerId) {
         return getCustomerLicensingList().stream().filter(
                 s -> s.getCustomerId() == customerId).map(

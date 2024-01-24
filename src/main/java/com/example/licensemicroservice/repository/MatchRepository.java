@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -50,11 +51,9 @@ public class MatchRepository {
 //        return summary;
 //    }
 
-    public Match findMatchById(int matchId) {
-        return getMatchList().stream().filter(s -> s.getMatchId() == matchId).findAny().orElseThrow(
-                () ->
-                        new EntityNotFoundException(
-                                "Match ID %s not found".formatted(matchId)));
+    public Optional<Match> findMatchById(int matchId) {
+        return getMatchList().stream().filter(s -> s.getMatchId() == matchId)
+                .findFirst();
     }
 
     public List<Match> findMatchesByTournamentId(int tournamentId){
