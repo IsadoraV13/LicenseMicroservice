@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/lms")
+@RequestMapping("/customerlicense")
 public class CustomerLicensingController {
 
     final CustomerLicensingService customerLicensingService;
@@ -20,7 +20,7 @@ public class CustomerLicensingController {
     }
 
 
-    @GetMapping("customerlicense/{customerId}")
+    @GetMapping("/{customerId}")
     public List<Integer> viewLicenseIdsByCustomerId(@PathVariable int customerId) {
         return customerLicensingService.getLicenseIdsByCustomerId(customerId);
     }

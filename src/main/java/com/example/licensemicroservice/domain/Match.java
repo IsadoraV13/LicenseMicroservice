@@ -1,5 +1,7 @@
 package com.example.licensemicroservice.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -8,6 +10,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 
 /*
+Requirements for Summary:
 summary: An optional parameter called summaryType can be set to any of:
 AvB - return string "<playerA> vs <playerB>"
 AvBTime - use start time to return string
@@ -17,13 +20,15 @@ AvBTime - use start time to return string
 
 public class Match {
     private int matchId;
-    private int tournamentId; // a match cannot be created without being associated with a Tournament, so we don't end
-    // up with 'orphaned' matches
-    private Timestamp startTime;
-    private Timestamp endTime;
-    private Player playerA;
+    private int tournamentId; // a match cannot be created without being associated with a Tournament, to not end up
+    // with 'orphaned' matches
+    private Timestamp startTime; // zoneDateTime would have been better here but didn't want to 'cheat' and change it
+    private Timestamp endTime; // decided not to use @JsonIgnore here because there are scenarios where we might need end time
+    private Player playerA; // used Players rather than just player names (as per requirement) - because there are
+    // situations where we might need more than just the playerName (e.g. player id or player rank)
     private Player playerB;
-    private String summaryType;
+    @JsonIgnore
+    private String summaryType; // currently no use case to return the summaryType
     private String summary;
 
 
@@ -122,42 +127,34 @@ public class Match {
         String summary = "";
         try {
             if (summaryType.equals("AvB")) {
-                System.out.println(this.matchId + ", " + summaryType);
                 summary =  "%s %s vs %s %s".formatted(this.getPlayerA().getPlayerFirstName(), this.getPlayerA().getPlayerLastName(),
                         this.getPlayerB().getPlayerFirstName(), this.getPlayerB().getPlayerLastName());
             } else if (summaryType.equals("AvBTime")) {
                 long durationInMinutes = Duration.between(this.startTime.toLocalDateTime(), LocalDateTime.now()).toMinutes();
                 long durationInHours = Duration.between(this.startTime.toLocalDateTime(), LocalDateTime.now()).toHours();
                 long durationInDays = Duration.between(this.startTime.toLocalDateTime(), LocalDateTime.now()).toDays();
-                System.out.println("Days: " + durationInDays);
-                System.out.println("Hours: " + durationInHours);
-                System.out.println("Min: " + durationInMinutes);
                 if (this.startTime.toLocalDateTime().toLocalDate().isAfter(ChronoLocalDate.from(LocalDateTime.now()))) {
                     if (Math.abs(durationInDays) > 1) {
                         summary = "%s %s vs %s %s, starts in %s days".formatted(this.getPlayerA().getPlayerFirstName(), this.getPlayerA().getPlayerLastName(),
                                 this.getPlayerB().getPlayerFirstName(), this.getPlayerB().getPlayerLastName(), durationInDays * -1);
-                    } else if (Math.abs(durationInHours) < 1) {
+                    } else if (Math.abs(durationInHours) > 1) {
                         summary = "%s %s vs %s %s, starts in %s hours".formatted(this.getPlayerA().getPlayerFirstName(), this.getPlayerA().getPlayerLastName(),
                                 this.getPlayerB().getPlayerFirstName(), this.getPlayerB().getPlayerLastName(), durationInMinutes * -1);
                     } else {
                         summary = "%s %s vs %s %s, starts in %s minutes".formatted(this.getPlayerA().getPlayerFirstName(), this.getPlayerA().getPlayerLastName(),
                                 this.getPlayerB().getPlayerFirstName(), this.getPlayerB().getPlayerLastName(), durationInHours * -1);
                     }
-                    System.out.println(this.matchId + ", future event, " + summaryType);
-                    System.out.println("summary: " + summary);
                 } else {
                     if (durationInDays > 1) {
                         summary = "%s %s vs %s %s, started %s days ago".formatted(this.getPlayerA().getPlayerFirstName(), this.getPlayerA().getPlayerLastName(),
                                 this.getPlayerB().getPlayerFirstName(), this.getPlayerB().getPlayerLastName(), durationInDays);
-                    } else if (durationInHours < 1) {
+                    } else if (durationInHours > 1) {
                         summary = "%s %s vs %s %s, started %s hours ago".formatted(this.getPlayerA().getPlayerFirstName(), this.getPlayerA().getPlayerLastName(),
                                 this.getPlayerB().getPlayerFirstName(), this.getPlayerB().getPlayerLastName(), durationInMinutes);
                     } else {
                         summary = "%s %s vs %s %s, started %s minutes ago".formatted(this.getPlayerA().getPlayerFirstName(), this.getPlayerA().getPlayerLastName(),
                                 this.getPlayerB().getPlayerFirstName(), this.getPlayerB().getPlayerLastName(), durationInHours);
                     }
-                    System.out.println(this.matchId + ", past event, " + summaryType);
-                    System.out.println("summary: " + summary);;
                 }
             }
         } catch (Exception e) {

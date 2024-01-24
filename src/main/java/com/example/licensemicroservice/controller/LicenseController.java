@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/lms")
+@RequestMapping("/licenses")
 public class LicenseController {
 
     final
@@ -18,7 +18,7 @@ public class LicenseController {
         this.licenseService = licenseService;
     }
 
-    @GetMapping("license/{licenseId}")
+    @GetMapping("/{licenseId}")
     public License viewLicenseById(@PathVariable int licenseId) {
         return licenseService.getLicenseById(licenseId);
     }

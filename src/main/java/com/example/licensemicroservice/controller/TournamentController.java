@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/lms")
+@RequestMapping("/tournaments")
 public class TournamentController {
 
     final TournamentService tournamentService;
@@ -18,7 +18,7 @@ public class TournamentController {
         this.tournamentService = tournamentService;
     }
 
-    @GetMapping("tournament/{tournamentId}")
+    @GetMapping("/{tournamentId}")
     public Tournament viewTournamentById(@PathVariable int tournamentId) {
         return tournamentService.getTournamentById(tournamentId);
     }
